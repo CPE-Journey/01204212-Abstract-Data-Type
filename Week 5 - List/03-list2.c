@@ -105,7 +105,7 @@ void show(lList *start){
     printf("\n");
 }
 
-lList *show_reverse(lList *start,int first){
+void show_reverse(lList *start,int first){
     lList *crnt = start;
     lList *prev = NULL;
     lList *nxt = crnt->next;
@@ -120,7 +120,6 @@ lList *show_reverse(lList *start,int first){
     
     if(first){
         show(crnt);
-    // return crnt;
         show_reverse(crnt,0);
     }
 }
@@ -192,6 +191,7 @@ lList *change(lList *start){
 
     lList *changeNode = NULL;
     changeNode = append(changeNode);
+    printf("Test: %d",changeNode->num);
 
     if(first_order==0){
         changeNode->next = p->next;
@@ -248,7 +248,7 @@ int main(){
                 break;
 
             case 'R':
-                start = show_reverse(start,1);
+                show_reverse(start,1);
                 break;
 
             case 'I':

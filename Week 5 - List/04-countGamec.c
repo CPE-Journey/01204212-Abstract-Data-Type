@@ -17,9 +17,7 @@ Player *add(Player *player,int num,int uid,int last_one){
     new_player->next = NULL;
     if(!last_one){
         new_player->next = first;
-        // printf("%d %d\n",first,new_player->next);
     }
-    // printf("%d\n",p);
     if(player==NULL){
         player = new_player;
     }    
@@ -28,7 +26,6 @@ Player *add(Player *player,int num,int uid,int last_one){
             p = p->next;
         }
         p->next = new_player;
-        // printf("%d %d\n",p,new_player);
     }
     return player;
 }
@@ -89,19 +86,16 @@ int main(){
     
     i = 0;
     while(n > 1){
-        // printf("(# %d) Limit: %d Count: %d || ",player->id,player->limit,count);
         if(count%k==0 || inDigit(count,k)){
             player->limit -= 1;
         }
         if(player->limit == -1){
             player = out(player,0);
-            // printf("[OUT] ");
             n -= 1;
         }
         else{
             player = player->next;
         }
-        // printf("(# %d) Limit: %d Count: %d\n",player->id,player->limit,count);
         count++;
     }
     printf("%d\n",player->id);
