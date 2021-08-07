@@ -88,8 +88,10 @@ int main(){
     while(n > 1){
         if(count%k==0 || inDigit(count,k)){
             player->limit -= 1;
+            printf("(Id: %d) Count: %d Limit Left: %d\n",player->id,count,player->limit);
         }
         if(player->limit == -1){
+            printf("[X]\n\n\n");
             player = out(player,0);
             n -= 1;
         }
@@ -99,5 +101,4 @@ int main(){
         count++;
     }
     printf("%d\n",player->id);
-
 }

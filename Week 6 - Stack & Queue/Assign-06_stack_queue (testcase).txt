@@ -1,0 +1,104 @@
+1. basicStack
+>>> test case #1
+9
+1 2
+2
+1 4
+2
+1 6
+1 8
+1 10
+5
+4
+>>> test case #2
+7
+5
+4
+2
+3
+1 8
+1 10
+5
+>>> test case #3
+9
+1 2
+1 2
+1 2
+5
+3
+3
+5
+3
+5
+----------
+2. basicQueue
+>>> test case #1
+9
+1 2
+2
+1 4
+2
+1 6
+1 8
+1 10
+5
+4
+>>> test case #2
+7
+5
+4
+2
+3
+1 8
+1 10
+5
+>>> test case #3
+9
+1 2
+1 2
+1 2
+5
+3
+2
+5
+3
+5
+----------
+3. parenthesis
+>>> test case #1
+8
+()()[]{}
+>>> test case #2
+6
+([()])
+>>> test case #3
+6
+([)]{}
+>>> test case #4
+3
+([)
+----------
+4. postfix
+>>> test case #1
+5
+12-3+
+>>> test case #2
+9
+98*76+-5+
+>>> test case #3
+11
+57+5*32*-2+
+>>> test case #4
+13
+723*5+842/-*-
+>>> test case #5
+9
+324*15-/+
+----------
+5. hardPassword
+>>> test case #1
+1q2w3e4rxr4e3w2q1y
+>>> test case #2
+1q2w3e4rx1q2w3e4ry
+>>> test case #3
+1q2w3e4rx1q2w3ey

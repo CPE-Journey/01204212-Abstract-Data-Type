@@ -166,6 +166,7 @@ lList *delete(lList *start){
     if(order==0){
         return p->next;
     }
+
     else{
         lList *revNode = p->next;
         p->next = p->next->next;
@@ -191,7 +192,7 @@ lList *change(lList *start){
 
     lList *changeNode = NULL;
     changeNode = append(changeNode);
-    printf("Test: %d",changeNode->num);
+    printf("%d",changeNode->num);
 
     if(first_order==0){
         changeNode->next = p->next;
