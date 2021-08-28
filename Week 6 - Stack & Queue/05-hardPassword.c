@@ -9,11 +9,6 @@ typedef struct node{
 Stack *push(Stack *s,char value){
     Stack *node = malloc(sizeof(Stack));
     node->num = value;
-    node->next = NULL;
-
-    if(s == NULL){
-        return node;
-    }
     node->next = s;
     return node;
 }

@@ -16,8 +16,9 @@ Stack *push(Stack *jar,int c){
     return cookie;
 }
 
-Stack *pop(Stack *jar){
+Stack *pop(Stack *jar,int *n){
     Stack *p = jar;
+    *n = p->data;
     jar = jar->below;
     free(p);
     return jar;
@@ -56,7 +57,7 @@ Stack *make_empty(Stack *jar){
 
 int main(){
     Stack *jar = NULL;
-    int arg;
+    int arg,n;
     char command;
 
     while(1){
@@ -69,7 +70,8 @@ int main(){
                 break;
 
             case 'D':
-                jar = pop(jar);
+                jar = pop(jar,&n);
+                printf("%d\n",n);
                 break;
 
             case 'T':
