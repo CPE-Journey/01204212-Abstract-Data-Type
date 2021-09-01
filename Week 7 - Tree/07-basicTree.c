@@ -82,8 +82,6 @@ int isQEmpty(Queue *q){
     return 0;
 }
 
-
-
 // CUSTOM TOOL
 
 tree_t *quickSearch(tree_t *t,int value){
