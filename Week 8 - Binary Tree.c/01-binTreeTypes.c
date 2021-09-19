@@ -109,15 +109,15 @@ int is_complete(tree_t *t){
   return 1;
 }
 
-int is_degenertate(tree_t *t){
+int is_degenerate(tree_t *t){
   if(t==NULL || (t->left == NULL && t->right == NULL)){
     return 1;
   }
   if(t->left != NULL && t->right == NULL){
-    return is_degenertate(t->left);
+    return is_degenerate(t->left);
   }
   else if(t->left == NULL && t->right != NULL){
-    return is_degenertate(t->right);
+    return is_degenerate(t->right);
   }
   return 0;
 }
@@ -163,7 +163,7 @@ int main(void) {
     scanf("%d %d %d", &parent, &child, &branch);
     t = attach(t, parent, child, branch);
   }
-  printf("%d %d %d %d %d\n", is_full(t), is_perfect(t), is_complete(t), is_degenertate(t), is_skewed(t));
+  printf("%d %d %d %d %d\n", is_full(t), is_perfect(t), is_complete(t), is_degenerate(t), is_skewed(t));
   // printf("%d %d %d %d %d\n", is_full(t), is_perfect(t), is_complete(t), is_degenerate(t), is_skewed(t));
 
   return 0;
