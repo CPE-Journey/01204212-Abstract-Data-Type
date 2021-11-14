@@ -1,0 +1,141 @@
+1. hashTable1
+>>> test case #1
+13 10 19
+1 qwert
+1 asdf
+1 zklwo
+1 a 
+2 qwert
+2 qwerty
+2 a
+2 asdf
+2 omg
+2 abcd
+>>> test case #2
+211 20 93
+1 abcd
+1 abdc
+1 afnc
+1 oog
+1 ozg
+1 obg
+1 obp
+1 fjdlo
+1 auvun
+1 adzlr
+2 abcd
+2 abdc
+2 afnc
+2 oog
+2 ozg
+2 obg
+2 obp
+2 fjdlo
+2 auvun
+2 adzlr
+>>> test case #3
+31 14 19
+1 mhewrv
+1 rkrfni
+1 wtabik
+1 ibpffi
+1 hwrthu
+1 mcpsnn
+1 xmyprx
+2 mhewrv
+2 rkrfni
+2 wtabik
+2 ibpffi
+2 hwrthu
+2 mcpsnn
+2 xmyprx
+----------
+2. hashTable2
+>>> test case #1
+13 10 19
+1 qwert
+1 asdf
+1 zklwo
+1 a 
+2 qwert
+2 qwerty
+2 a
+2 asdf
+2 omg
+2 abcd
+>>> test case #2
+211 20 93
+1 abcd
+1 abdc
+1 afnc
+1 oog
+1 ozg
+1 obg
+1 obp
+1 fjdlo
+1 auvun
+1 adzlr
+2 abcd
+2 abdc
+2 afnc
+2 oog
+2 ozg
+2 obg
+2 obp
+2 fjdlo
+2 auvun
+2 adzlr
+>>> test case #3
+31 14 19
+1 mhewrv
+1 rkrfni
+1 wtabik
+1 ibpffi
+1 hwrthu
+1 mcpsnn
+1 xmyprx
+2 mhewrv
+2 rkrfni
+2 wtabik
+2 ibpffi
+2 hwrthu
+2 mcpsnn
+2 xmyprx
+----------
+3. simpleCache
+>>> test case #1
+100 10 10
+10
+20
+20
+15
+73
+50
+14
+94
+78
+94
+>>> test case #2
+50 15 10
+4
+4
+13
+6
+4
+12
+17
+5
+11
+6
+>>> test case #3
+20 4 10
+18
+19
+9
+16
+0
+12
+0
+9
+11
+10

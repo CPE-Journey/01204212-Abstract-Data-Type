@@ -55,7 +55,6 @@ void delete_max(heap_t *t){
   }
   t->last_index -= 1;
   t->data[1] = t->data[t->last_index];
-  // printf("MAX: %d Point Index: %d\n",t->data[1],t->last_index);
   reversePercolations(t,1);
 }
 

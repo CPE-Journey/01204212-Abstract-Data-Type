@@ -1,0 +1,50 @@
+1. insertionSort
+>>> test case #1
+8
+4 3 2 10 12 1 5 6
+>>> test case #2
+9
+54 26 93 17 77 31 44 55 20
+>>> test case #3
+16
+9 15 8 1 4 11 7 12 13 6 5 3 16 2 10 14
+----------
+2. anagram
+>>> test case #1
+8 3
+final
+fnali
+fnial
+fianl
+title
+ttile
+tilte
+equal
+fanil
+reply
+title
+>>> test case #2
+8 5
+equal
+tilte
+porxy
+stioc
+sotic
+prxoy
+eauql
+asybs
+search
+stoic
+tilt
+qual
+proxy
+>>> test case #3
+4 4
+fried
+gainly
+sadder
+listen
+fired
+laying
+dreads
+silent

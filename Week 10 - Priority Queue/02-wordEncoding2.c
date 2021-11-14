@@ -208,11 +208,12 @@ void HuffmanEncoding(Heap *h,char *code){
 
 int main(){
     int a,n,feq,per_dir;
-    char text[100000];
+    char text[15];
     HeapArr *ha = NULL;
 
     scanf("%d",&n);
     ha = createHeapArray(n);
+
     for(a=0;a<n;a++){
         scanf("%s %d",text,&feq);
         HA_insert(ha,text,feq);
