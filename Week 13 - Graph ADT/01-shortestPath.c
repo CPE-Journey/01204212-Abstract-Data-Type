@@ -1,119 +1,42 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct node{
-    int data;
-    int weight;
-    struct node *next;
-}Node;
-
-typedef struct{
-    Node **arr;
-    int *visit;
-    int index;
-}Graph;
-
-Graph *createGraph(int s){
-    Graph *g = malloc(sizeof(Graph));
-    g->arr = malloc(sizeof(Node)*s);
-    g->visit = malloc(sizeof(int)*s);
-    g->index = 0;
-    return g;
-}
-
-Node *createNode(int value,int cost){
-    Node *new = malloc(sizeof(Node));
-    new->data = value;
-    new->weight = cost;
-    new->next = NULL;
-    return new;
-}
-
-void insert(Graph *g,int v1,int v2,int weight){
-    int i,isFound1 = 0,isFound2 = 0;
-    for(i=0;i<g->index;i++){
-        if(g->arr[i]->data == v1){
-            Node *tmp = g->arr[i];
-            while(tmp->next != NULL)
-                tmp = tmp->next;
-            tmp->next = createNode(v2,weight);
-            isFound1 = 1;
-            break;
+int **createMatrix(int size){
+    int i,j;
+    int **mat = malloc(sizeof(int*)*size);
+    for(i=0;i<size;i++){
+        mat[i] = malloc(sizeof(int)*size);
+        for(j=0;j<size;j++){
+            if(i==j)
+                mat[i][j] = 0;
+            else
+                mat[i][j] = 999;
         }
     }
-    for(i=0;i<g->index;i++){
-        if(g->arr[i]->data == v2){
-            Node *tmp = g->arr[i];
-            while(tmp->next != NULL)
-                tmp = tmp->next;
-            tmp->next = createNode(v1,weight);
-            isFound2 = 1;
-            break;
-        }
-    }
-    if(!isFound1){
-        g->arr[g->index] = createNode(v1,weight);
-        g->arr[g->index]->next = createNode(v2,weight);
-        g->visit[g->index] = 0;
-        g->index++;
-    }
-    if(!isFound2){
-        g->arr[g->index] = createNode(v2,weight);
-        g->arr[g->index]->next = createNode(v1,weight);
-        g->visit[g->index] = 0;
-        g->index++;
-    }
+    return mat;
 }
 
-int indexOf(Graph *g,int value){
-    int i;
-    for(i=0;i<g->index;i++){
-        if(g->arr[i]->data == value)
-            return i;
-    }
-    return -1;
-}
-
-void shortestPathRecursion(Graph *g,int begin,int dest,int cost,int *low){
-    Node *start = g->arr[indexOf(g,begin)]->next;
-    g->visit[indexOf(g,begin)] = 1;
-    while(start != NULL){
-        if(g->visit[indexOf(g,start->data)]){
-            start = start->next;
-            continue;
-        }
-        cost += start->weight;
-        if(start->data == dest){
-            if(*low == -1 || cost < *low){
-                *low = cost;
-                break;
-            }
-        }
-        shortestPathRecursion(g,start->data,dest,cost,low);
-        cost -= start->weight;
-        start = start->next;
-    }
-    g->visit[indexOf(g,begin)] = 0;
-}
-
-int shortestPath(Graph *g,int begin,int dest){
-    if(begin == dest)
-        return 0;
-    int low = -1;
-    shortestPathRecursion(g,begin,dest,0,&low);
-    return low;
+int min(int a,int b){
+    return a < b ? a : b;
 }
 
 int main(){
-    int i,n,m,p,n1,n2,w;
+    int i,j,k,n,m,p,n1,n2,w;
     scanf("%d %d %d",&n,&m,&p);
-    Graph *graph = createGraph(m);
+    int **adj = createMatrix(n);
     for(i=0;i<m;i++){
         scanf("%d %d %d",&n1,&n2,&w);
-        insert(graph,n1,n2,w);
+        adj[n1][n2] = w;
+        adj[n2][n1] = w;
+    }
+    for(i=0;i<n;i++){
+        for(j=0;j<n;j++){
+            for(k=0;k<n;k++)
+                adj[i][k] = min(adj[i][k],adj[i][j]+adj[j][k]);
+        }
     }
     for(i=0;i<p;i++){
         scanf("%d %d",&n1,&n2);
-        printf("%d\n",shortestPath(graph,n1,n2));
+        printf("%d\n",adj[n1][n2] <= 100 ? adj[n1][n2] : -1);
     }
 }

@@ -1,154 +1,55 @@
 #include <stdio.h>
 #include <stdlib.h>
+int *current;
 
-typedef struct node{
-    int data;
-    struct node *next;
-}Node;
-
-typedef struct{
-    Node **arr;
-    int *visit;
-    int index;
-}Graph;
-
-typedef struct{
-    int *arr;
-    int index;
-}ArrayList;
-
-ArrayList *createArrayList(int size){
-    ArrayList *al = malloc(sizeof(ArrayList));
-    al->arr = malloc(sizeof(int)*size);
-    al->index = 0;
-    return al;
-}
-
-void append(ArrayList *al,int num){
-    al->arr[al->index] = num;
-    al->index++;
-}
-
-Graph *createGraph(int s){
-    Graph *g = malloc(sizeof(Graph));
-    g->arr = malloc(sizeof(Node)*s);
-    g->visit = malloc(sizeof(int)*s);
-    g->index = 0;
-    return g;
-}
-
-Node *createNode(int value){
-    Node *new = malloc(sizeof(Node));
-    new->data = value;
-    new->next = NULL;
-    return new;
-}
-
-void insert(Graph *g,int v1,int v2){
-    int i,isFound1 = 0,isFound2 = 0;
-    for(i=0;i<g->index;i++){
-        if(g->arr[i]->data == v1){
-            Node *tmp = g->arr[i];
-            while(tmp->next != NULL)
-                tmp = tmp->next;
-            tmp->next = createNode(v2);
-            isFound1 = 1;
-            break;
+int **createMatrix(int size){
+    int i,j;
+    int **mat = malloc(sizeof(int*)*size);
+    for(i=0;i<size;i++){
+        mat[i] = malloc(sizeof(int)*size);
+        for(j=0;j<size;j++){
+            mat[i][j] = 0;
         }
     }
-    for(i=0;i<g->index;i++){
-        if(g->arr[i]->data == v2){
-            Node *tmp = g->arr[i];
-            while(tmp->next != NULL)
-                tmp = tmp->next;
-            tmp->next = createNode(v1);
-            isFound2 = 1;
-            break;
-        }
-    }
-    if(!isFound1){
-        g->arr[g->index] = createNode(v1);
-        g->arr[g->index]->next = createNode(v2);
-        g->visit[g->index] = 0;
-        g->index++;
-    }
-    if(!isFound2){
-        g->arr[g->index] = createNode(v2);
-        g->arr[g->index]->next = createNode(v1);
-        g->visit[g->index] = 0;
-        g->index++;
-    }
+    return mat;
 }
 
-int isIn(int num,int *arr,int len){
-    int i;
-    for(i=0;i<len;i++){
-        if(num == arr[i])
-            return 1;
-    }
-    return 0;
+int max(int a,int b){
+    return a > b ? a : b;
 }
 
-int intersect(int *arr1,int len1,int *arr2,int len2){
-    int i,count = 0;
-    for(i=0;i<len1;i++){
-        if(isIn(arr1[i],arr2,len2))
-            count++;
+int isClique(int **arr,int re_size){
+    int i,j;
+    for(i=1;i<re_size;i++){
+        for(j=i+1;j<re_size;j++){
+            if(!arr[current[i]][current[j]])
+                return 0;
+        }
     }
-    return count;
+    return 1;
 }
 
-int maxClique(Graph *g){
-    int i,j,maxC = 0;
-    for(int i=0;i<g->index;i++){
-        // Create Sample Array
-        ArrayList *select = createArrayList(g->index);
-        Node *tmp = g->arr[i];
-        while(tmp != NULL){
-            append(select,tmp->data);
-            tmp = tmp->next;
+int maxClique(int **arr,int start,int size,int re_size){
+    int i,max_c = 0;
+    for(i=start;i<size;i++){
+        current[re_size] = i;
+        if(isClique(arr,re_size+1)){
+            max_c = max(max_c,re_size);
+            max_c = max(max_c,maxClique(arr,i,size,re_size+1));
         }
-        // Finding Intersect
-        ArrayList *inter = createArrayList(g->index);
-        for(int j=0;j<g->index;j++){
-            if(i == j)
-                continue;
-            ArrayList *sample = createArrayList(g->index);
-            Node *tmp = g->arr[j];
-            while(tmp != NULL){
-                append(sample,tmp->data);
-                tmp = tmp->next;
-            }
-            append(inter,intersect(select->arr,select->index,sample->arr,sample->index));
-            free(sample);
-        }
-        // Count For Max
-        ArrayList *record = createArrayList(g->index);
-        for(j=0;j<inter->index;j++){
-            if(isIn(inter->arr[j],record->arr,record->index))
-                continue;
-            int crnt = inter->arr[j],counter = 0,k;
-            for(k=j;k<inter->index;k++){
-                if(inter->arr[j] == inter->arr[k])
-                    counter++;
-            }
-            append(record,inter->arr[j]);
-            if(counter+1 == inter->arr[j] && counter+1 > maxC){
-                maxC = counter+1;
-            }
-        }
-        free(select);
     }
-    return maxC;
+    return max_c;
 }
 
 int main(){
-    int i,n,m,n1,n2,w,sp;
+    int i,j,n,m,n1,n2;
     scanf("%d %d",&n,&m);
-    Graph *graph = createGraph(n);
+    int **adj = createMatrix(n);
+    current = malloc(sizeof(int)*n);
     for(i=0;i<m;i++){
         scanf("%d %d",&n1,&n2);
-        insert(graph,n1,n2);
+        adj[n1][n2] = 1;
+        adj[n2][n1] = 1;
     }
-    printf("%d",maxClique(graph));
+    printf("%d\n",maxClique(adj,0,n,1));
 }

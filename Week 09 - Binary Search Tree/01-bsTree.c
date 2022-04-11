@@ -12,200 +12,83 @@ typedef node_t bst_t;
 // Write your code here
 // ...
 
-bst_t *search(bst_t *t,int num){
-    if(t==NULL || t->data == num){
-        return t;
-    }
-    else if(t->data > num){
-        return search(t->left,num);
-    }
-    return search(t->right,num);
-}
-
-void insertParent(bst_t *t,int num,bst_t **parent,int *is_left){
-    if(t==NULL){
-        return;
-    }
-    if(t->data > num){
-        if(t->left == NULL){
-            *parent = t;
-            *is_left = 1;
-            return;
-        }
-        insertParent(t->left,num,parent,is_left);
-    }
-    else{
-        if(t->right == NULL){
-            *parent = t;
-            *is_left = 0;
-            return;
-        }
-        insertParent(t->right,num,parent,is_left);
-    }
-}
-
-void findParent(bst_t *t,int num,bst_t *par,bst_t **rtn){
-  if(t == NULL || *rtn != NULL){
-    return;
-  }
-  else if((t->left != NULL && t->left->data == num) || (t->right != NULL && t->right->data == num)){
-    *rtn = t;
-    return;
-  }
-  findParent(t->left,num,NULL,rtn);
-  findParent(t->right,num,NULL,rtn);
-}
-
-bst_t *insert(bst_t *t,int num){
+bst_t *createNode(int value){
     bst_t *node = malloc(sizeof(bst_t));
-    node->data = num;
+    node->data = value;
     node->right = NULL;
     node->left = NULL;
-    
-    if(t==NULL){
-        return node;
-    }
+}
 
-    int is_left;
-    bst_t *select = NULL;
-    insertParent(t,num,&select,&is_left);
-    if(is_left){
-        select->left = node;
+bst_t *insert(bst_t *t,int value){
+    if(t==NULL){
+        return createNode(value);
+    }
+    else if(t->data > value){
+        t->left = insert(t->left,value);
     }
     else{
-        select->right = node;
+        t->right = insert(t->right,value);
     }
     return t;
 }
 
-bst_t *delete(bst_t *t,int num){
-  bst_t *select = search(t,num);
-  bst_t *parent = NULL;
-  if(t->data != num){
-    findParent(t,num,NULL,&parent);
-  }
-
-  // Only Root Left
-  if(t->data == num && t->left == NULL && t->right == NULL){
-    return NULL;
-  }
-
-  // Delete at Leaf Node
-  else if(select->left == NULL && select->right == NULL){
-    if(parent->left != NULL && parent->left->data == num){
-      parent->left = NULL;
+bst_t *delete(bst_t *t,int value){
+    if(t==NULL){
+        return t;
+    }
+    else if(t->data > value){
+        t->left = delete(t->left,value);
+    }
+    else if(t->data < value){
+        t->right = delete(t->right,value);
     }
     else{
-      parent->right = NULL;
-    }
-  }
-
-  // Delete 2 Chilldren Node
-  else if(select->left != NULL && select->right != NULL){
-      select->data = find_min(select->right);
-      bst_t *rhs = select->right,*prev = select;
-      while(rhs->left != NULL){
-        prev = rhs;
-        rhs = rhs->left;
-      }
-      if(rhs->right == NULL){
-        if(prev->left == rhs){
-          prev->left = NULL;
+        // 2 Children
+        if(t->left != NULL && t->right != NULL){
+            int new_head = find_min(t->right);
+            t->data = new_head;
+            t->right = delete(t->right,new_head);
+            return t;
         }
+        // 0-1 Child
         else{
-          prev->right = NULL;
+            bst_t *child = NULL;
+            if(t->left != NULL){
+                child = t->left;
+            }
+            else if(t->right != NULL){
+                child = t->right;
+            }
+            return child;
         }
-      }
-      else{
-        rhs->data = rhs->right->data;
-        rhs->right = NULL;
-      }
     }
-
-  // Delete 1 Child Node
-  else{
-    if(parent == NULL){
-      if(select->left != NULL){
-        return select->left;
-      }
-      return select->right;
-    }
-    else if(parent->left != NULL && parent->left->data == num){
-      if(select->left != NULL){
-        parent->left = parent->left->left;
-      }
-      else{
-        parent->left = parent->left->right;
-      }
-    }
-    else if(parent->right != NULL && parent->right->data == num){
-      if(select->left != NULL){
-        parent->right = parent->right->left;
-      }
-      else{
-        parent->right = parent->right->right;
-      }
-    }
-  }
-  
-  return t;
+    return t;
 }
 
-int find(bst_t *t,int num){
+int find(bst_t *t,int value){
     if(t==NULL){
         return 0;
     }
-    if(t->data == num){
+    else if(t->data == value){
         return 1;
     }
-    else if(t->data > num){
-        return find(t->left,num);
-    }
-    return find(t->right,num);
-}
-
-void find_minRec(bst_t *t,int *min){
-  if(t==NULL){
-    return;
-  }
-  if(t->data < *min){
-    *min = t->data;
-  }
-  find_minRec(t->left,min);
-  find_minRec(t->right,min);
+    return find(t->left,value) || find(t->right,value) ? 1:0;
 }
 
 int find_min(bst_t *t){
-  int min = t->data;
-  find_minRec(t,&min);
-  return min;
-}
-
-void find_maxRec(bst_t *t,int *max){
-  if(t==NULL){
-    return;
-  }
-  if(t->data > *max){
-    *max = t->data;
-  }
-  find_maxRec(t->left,max);
-  find_maxRec(t->right,max);
+    bst_t *tmp = t;
+    while(tmp->left != NULL){
+        tmp = tmp->left;
+    }
+    return tmp->data;
 }
 
 int find_max(bst_t *t){
-  int max = t->data;
-  find_maxRec(t,&max);
-  return max;
-}
-
-void BFS(bst_t *t,int depth){
-    if(t==NULL){return;}
-    for(int i=0;i<depth;i++){
-        printf("    ");
+    bst_t *tmp = t;
+    while(tmp->right != NULL){
+        tmp = tmp->right;
     }
-    printf("%d\n",t->data);
-    BFS(t->left,depth+1);
-    BFS(t->right,depth+1);
+    return tmp->data;
 }
 
 int main(void) {
@@ -234,9 +117,6 @@ int main(void) {
         break;
       case 5:
         printf("%d\n", find_max(t));
-        break;
-      case 6:
-        BFS(t,0);
         break;
     }
   }

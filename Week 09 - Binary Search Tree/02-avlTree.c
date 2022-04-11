@@ -19,201 +19,112 @@ typedef node_t avl_t;
 // included in the week9.h header
 // ...
 
-avl_t *rightRoataion(avl_t *t){
-  avl_t *rotation = t->left;
-  avl_t *rhs = t;
-  rhs->left = rotation->right;
-  rotation->right = rhs;
-
-  updateHeight(rhs);
-  updateHeight(rotation);
-
-  return rotation;
+avl_t *createNode(int value){
+    avl_t *node = malloc(sizeof(avl_t));
+    node->data = value;
+    node->height = 1;
+    node->right = NULL;
+    node->left = NULL;
+    return node;
 }
 
-avl_t *leftRoataion(avl_t *t){
-  avl_t *rotation = t->right;
-  avl_t *lhs = t;
-  lhs->right = rotation->left;
-  rotation->left = lhs;
+int find_min(avl_t *t){
+    avl_t *tmp = t;
+    while(tmp->left != NULL){
+        tmp = tmp->left;
+    }
+    return tmp->data;
+}
 
-  updateHeight(lhs);
-  updateHeight(rotation);
+int balance(avl_t *t){
+  if(t==NULL){
+    return 0;
+  }
+  return getHeight(t->left) - getHeight(t->right);
+}
 
-  return rotation;
+avl_t* leftRotation(avl_t* t){
+    avl_t *rotate = t;
+    avl_t *rhs = t->right;
+
+    rotate->right = rhs->left;
+    rhs->left = rotate;
+
+    updateHeight(rotate);
+    updateHeight(rhs);
+    return rhs;
+}
+avl_t* rightRotation(avl_t* t){
+    avl_t *rotate = t;
+    avl_t *lhs = t->left;
+
+    rotate->left = lhs->right;
+    lhs->right = rotate;
+
+    updateHeight(rotate);
+    updateHeight(lhs);
+    return lhs;
 }
 
 avl_t *leftRightRotation(avl_t *t){
-  t->left = leftRoataion(t->left);
-  return rightRoataion(t);
+  t->left = leftRotation(t->left);
+  return rightRotation(t);
 }
 
 avl_t *rightLeftRotation(avl_t *t){
-  t->right = rightRoataion(t->right);
-  return leftRoataion(t);
+  t->right = rightRotation(t->right);
+  return leftRotation(t);
 }
 
 int getHeight(avl_t *t){
-  if(t==NULL) return 0;
+  if(t==NULL){
+    return 0;
+  }
   return t->height;
 }
 
 void updateHeight(avl_t *t){
-  int lh = -1,rh = -1;
-  if(t->left != NULL){lh = t->left->height;}
-  if(t->right != NULL){rh = t->right->height;}
-  if(t->left == NULL && t->right == NULL){
-    t->height = 0;
-  }
-  else if(lh>rh){
-    t->height = lh+1;
+  int lh = getHeight(t->left), rh = getHeight(t->right);
+  if(lh > rh){
+    t->height = lh + 1;
   }
   else{
-    t->height = rh+1;
+    t->height = rh + 1;
   }
-}
-
-avl_t *createNode(int value){
-  avl_t *node = malloc(sizeof(avl_t));
-  node->data = value;
-  node->height = 0;
-  node->left = NULL;
-  node->right = NULL;
-  return node;
 }
 
 avl_t *insert(avl_t *t,int value){
-  //INSERT RECURSION
-  if(t==NULL){
-    return createNode(value);
-  }
-  else if(t->data > value){
-    t->left = insert(t->left,value);
-  }
-  else if(t->data < value){
-    t->right = insert(t->right,value);
-  }
-  else{
-    return t;
-  }
-  
-  // UPDATE HEIGHT
-  updateHeight(t);
-  
-  // TREE ROTATION
-  int lh = -1,rh = -1;
-  if(t->left != NULL){lh = t->left->height;}
-  if(t->right != NULL){rh = t->right->height;}
-  printf("%d %d\n",lh,rh);
-
-  if(lh-rh > 1 && value < t->left->data){
-    printf("Doing 1 at %d",t->data);
-    return rightRoataion(t);
-  }
-  else if(rh-lh > 1 && value > t->right->data){
-    printf("Doing 1 at %d",t->data);
-    return leftRoataion(t);
-  }
-  else if(lh-rh > 1 && value > t->left->data){
-    printf("Doing 2 at %d",t->data);
-    return leftRightRotation(t);
-  }
-  else if(rh-lh > 1 && value < t->right->data){
-    printf("Doing 3 at %d",t->data);
-    return rightLeftRotation(t);
-  }
-  return t;
-}
-
-int find_min(avl_t *t){
-  avl_t *tmp = t;
-  while(tmp->left != NULL){
-    tmp = tmp->left;
-  }
-  return tmp->data;
-}
-
-void deleteNode(avl_t *select,int value,avl_t *parent){
-  if(select==NULL){
-    return;
-  }
-  else if(select->data == value){
-    // printf("Delete at %d %d\n",select->data,parent->data);
-    // printf("Par = %d Current = %d\n",parent->data,select->data);
-    
-    // Delete at Leaf Node
-    if(select->left == NULL && select->right == NULL){
-      if(parent->left != NULL && parent->left->data == value){
-        parent->left = NULL;
-      }
-      else{
-        parent->right = NULL;
-      }
+    if(t==NULL){
+        return createNode(value);
     }
-
-    // Delete 2 Chilldren Node
-    else if(select->left != NULL && select->right != NULL){
-      select->data = find_min(select->right);
-      avl_t *rhs = select->right,*prev = select;
-      while(rhs->left != NULL){
-        prev = rhs;
-        rhs = rhs->left;
-      }
-      if(rhs->right == NULL){
-        if(prev->left == rhs){
-          prev->left = NULL;
-        }
-        else{
-          prev->right = NULL;
-        }
-      }
-      else{
-        rhs->data = rhs->right->data;
-        rhs->right = NULL;
-      }
+    else if(t->data > value){
+        t->left = insert(t->left,value);
     }
-
-    // Delete 1 Child Node
     else{
-      if(parent == NULL){
-        if(select->left != NULL){
-          return select->left;
-        }
-        return select->right;
-      }
-      else if(parent->left != NULL && parent->left->data == value){
-        if(select->left != NULL){
-          parent->left = parent->left->left;
-        }
-        else{
-          parent->left = parent->left->right;
-        }
-      }
-      else if(parent->right != NULL && parent->right->data == value){
-        if(select->left != NULL){
-          parent->right = parent->right->left;
-        }
-        else{
-          parent->right = parent->right->right;
-        }
-      }
+        t->right = insert(t->right,value);
     }
-    if(parent!=NULL && parent->right == NULL && parent->left==NULL){
-      parent->height -= 1;
-    }
+
+    updateHeight(t);
+
+    int bal = balance(t);
     
-    return select;
-  }
-  else if(select->data > value){
-    /* select->left = */ deleteNode(select->left,value,select);
-  }
-  else{
-    /* select->right = */ deleteNode(select->right,value,select);
-  }
+    if(bal > 1 && value < t->left->data){
+    return rightRotation(t);
+    }
+    else if(bal < -1 && value > t->right->data){
+      return leftRotation(t);
+    }
+    else if(bal > 1 && value > t->left->data){
+      return leftRightRotation(t);
+    }
+    else if(bal < -1 && value < t->right->data){
+      return rightLeftRotation(t);
+    }
+    return t;
 }
 
 avl_t *delete(avl_t *t,int value){
-  if(t==NULL){
+    if(t==NULL){
         return t;
     }
     else if(t->data > value){
@@ -242,32 +153,35 @@ avl_t *delete(avl_t *t,int value){
             return child;
         }
     }
-  
-  // UPDATE HEIGHT
-  updateHeight(t);
-  
-  // TREE ROTATION
-  int lh = -1,rh = -1;
-  if(t->left != NULL){lh = t->left->height;}else{lh = -1;}
-  if(t->right != NULL){rh = t->right->height;}else{rh = -1;}
-  printf("%d %d\n",lh,rh);
-  if(lh-rh > 1 && value < t->left->data){
-    printf("Doing 1 at %d",t->data);
-    return rightRoataion(t);
-  }
-  else if(rh-lh > 1 && value > t->right->data){
-    printf("Doing 1 at %d",t->data);
-    return leftRoataion(t);
-  }
-  else if(lh-rh > 1 && value > t->left->data){
-    printf("Doing 2 at %d",t->data);
-    return leftRightRotation(t);
-  }
-  else if(rh-lh > 1 && value < t->right->data){
-    printf("Doing 3 at %d",t->data);
-    return rightLeftRotation(t);
-  }
-  return t;
+
+    if(t==NULL){return t;}
+
+    updateHeight(t);
+
+    int bal = balance(t);
+    if(bal > 1 && balance(t->left) >= 0){
+    return rightRotation(t);
+    }
+    else if(bal < -1 && balance(t->right) <= 0){
+      return leftRotation(t);
+    }
+    else if(bal > 1 && balance(t->left) < 0){
+      return leftRightRotation(t);
+    }
+    else if(bal < -1 && balance(t->left) > 0){
+      return rightLeftRotation(t);
+    }
+    return t;
+}
+
+void BFS(avl_t *t,int depth){
+    if(t==NULL){return;}
+    for(int i=0;i<depth;i++){
+        printf("    ");
+    }
+    printf("%d(%d)\n",t->data,t->height);
+    BFS(t->left,depth+1);
+    BFS(t->right,depth+1);
 }
 
 int main(void) {
@@ -288,7 +202,6 @@ int main(void) {
         t = delete(t, data);
         break;
       case 3:
-        BFS(t,0);
         print_tree(t);
         break;
     }
